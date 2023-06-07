@@ -1,0 +1,221 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+struct property{
+    char Adress[100];           //Global declared variables
+    int Price;
+    char Type[100];
+    char Area[100];
+    char City[100];
+    char State[100];
+};
+int add_property_record(){              //Adding the data to the file
+    struct property p;
+    FILE *fp;
+    fp = fopen("property.txt","a");
+    printf("Enter the Adress of the property: ");
+    scanf("%s",p.Adress);
+    printf("Enter the Price of the property: ");
+    scanf("%d",&p.Price);
+    fflush(stdin);
+    printf("Enter the Type of the property: ");
+    scanf("%s",p.Type);
+    fflush(stdin);
+    printf("Enter the Area of the property: ");
+    scanf("%s",p.Area);
+    fflush(stdin);
+    printf("Enter the City of the property: ");
+    scanf("%s",p.City);
+    fflush(stdin);
+    printf("Enter the State of the property: ");
+    scanf("%s",p.State);
+    fflush(stdin);
+    fprintf(fp,"\n%s %d %s %s %s %s\n",p.Adress,p.Price,p.Type,p.Area,p.City,p.State);
+    fclose(fp);
+    system("clear");
+    return 0;
+}
+int display_property_record(){              //Display the all Data on screen
+    struct property p;
+    FILE *fp;
+    fp = fopen("property.txt","r");
+    while(fscanf(fp,"%s %d %s %s %s %s",p.Adress,&p.Price,p.Type,p.Area,p.City,p.State)!=EOF){
+        printf("Adress: %s\nPrice: %d\nType: %s\nArea: %s\nCity: %s\nState: %s\n",p.Adress,p.Price,p.Type,p.Area,p.City,p.State);
+        }
+        fclose(fp);
+        return 0;
+}
+int property_record_search(){       //Searching the property 
+    struct property p;
+    FILE *fp;
+    char search[100];
+    int flag = 0;
+    fp = fopen("property.txt","r");
+    printf("Enter the Adress of the property: ");
+    scanf("%s",search);
+    while(fscanf(fp,"%s %d %s %s %s %s",p.Adress,&p.Price,p.Type,p.Area,p.City,p.State)!=EOF){      //scanning the details on behalf of address
+        if(strcmp(search,p.Adress)==0){
+            printf("Adress: %s\nPrice: %d\nType: %s\nArea: %s\nCity: %s\nState: %s\n",p.Adress,p.Price,p.Type,p.Area,p.City,p.State);
+            flag = 1;
+            }
+            }
+            if(flag == 0){
+                printf("No such record found\n");
+                }
+                fclose(fp);
+                return 0;
+                }
+int Buy_sell_property(){            //Buying and selling the property 
+    struct property p;
+    FILE *fp;
+    char Adress[100];
+    int flag = 0;
+    printf("Enter the Adress to buy/sell: ");
+    scanf("%s",Adress);
+    fp = fopen("property.txt","r");
+    while(fscanf(fp,"%s %d %s %s %s %s",p.Adress,&p.Price,p.Type,p.Area,p.City,p.State)!=EOF){
+        if(strcmp(Adress,p.Adress)==0){
+        printf("Adress: %s\nPrice: %d\nType: %s\nArea: %s\nCity: %s\nState: %s\n",p.Adress,p.Price,p.Type,p.Area,p.City,p.State);
+        flag = 1;
+        }
+        }
+        if(flag == 0){
+            printf("No such record found\n");
+            }
+            fclose(fp);
+            if(flag == 1){
+                int choice;
+                printf("Enter 1 to buy and 2 to sell: ");               //Enter the choice to buy or sell
+                scanf("%d",&choice);
+                if(choice == 1){
+                    int price;
+                    printf("Enter the price you want to buy: ");                //Buying detail
+                    scanf("%d",&price);
+                    if(price < p.Price){
+                        printf("You can buy this property\n");
+                        }
+                        else{
+                            printf("You can't buy this property\n");
+                            }
+                            }
+                            else if(choice == 2){
+                                int price;
+                                printf("Enter the price you want to sell: ");               //Selling detail
+                                scanf("%d",&price);
+                                if(price > p.Price){
+                                    printf("You can sell this property\n");
+                                    }
+                                    else{
+                                        printf("You can't sell this property\n");
+                                        }
+                                        }
+                                        else{
+                                            printf("Invalid choice\n");
+                                            }
+                                            }
+                                            return 0;
+                                            }
+                                            
+int delete_property_record(){                   //Delete and edit record
+    struct property p;
+    FILE *fp;
+    char Adress[100];
+    int flag = 0;
+    printf("Enter the Adress to delete: ");
+    scanf("%s",Adress);
+    fp = fopen("property.txt","r");
+    while(fscanf(fp,"%s %d %s %s %s %s",p.Adress,&p.Price,p.Type,p.Area,p.City,p.State)!=EOF){
+        if(strcmp(Adress,p.Adress)==0){
+        printf("Adress: %s\nPrice: %d\nType: %s\nArea: %s\nCity: %s\nState: %s\n",p.Adress,p.Price,p.Type,p.Area,p.City,p.State);
+        flag = 1;
+        }
+        }
+        printf("Enter 'edit' to edit and 'delete to delete the property: ");            //Choosing to delete or edit
+        char choice[100];
+        scanf("%s",choice); 
+        if(strcmp(choice,"delete")==0){
+            FILE *fp1;
+            fp1 = fopen("property1.txt","a");               //Creating new file
+            fp = fopen("property.txt","r");
+            while(fscanf(fp,"%s %d %s %s %s %s",p.Adress,&p.Price,p.Type,p.Area,p.City,p.State)!=EOF){
+                if(strcmp(Adress,p.Adress)!=0){
+                    fprintf(fp1,"%s %d %s %s %s %s",p.Adress,p.Price,p.Type,p.Area,p.City,p.State);
+                    }
+                    }
+                    fclose(fp);
+                    fclose(fp1);
+                    remove("property.txt");                 //Deleting the old file
+                    rename("property1.txt","property.txt");         //Renaming the new file on the name of old file
+                    }
+                    else if(strcmp(choice,"edit")==0){              //Editing the details 
+                        FILE *fp1;
+                        fp1 = fopen("property1.txt","a");
+                        fp = fopen("property.txt","r");
+                        while(fscanf(fp,"%s %d %s %s %s %s",p.Adress,&p.Price,p.Type,p.Area,p.City,p.State)!=EOF){
+                            if(strcmp(Adress,p.Adress)!=0){
+                                fprintf(fp1,"%s %d %s %s %s %s",p.Adress,p.Price,p.Type,p.Area,p.City,p.State);
+                                }
+                                else{
+                                    printf("Enter the Adress of the property: ");       //Enter the details
+                                    scanf("%s",p.Adress);
+                                    printf("Enter the Price of the property: ");
+                                    scanf("%d",&p.Price);
+                                    printf("Enter the Type of the property: ");
+                                    scanf("%s",p.Type);
+                                    printf("Enter the Area of the property: ");
+                                    scanf("%s",p.Area);
+                                    printf("Enter the City of the property: ");
+                                    scanf("%s",p.City);
+                                    printf("Enter the State of the property: ");
+                                    scanf("%s",p.State);
+                                    fprintf(fp1,"%s %d %s %s %s %s",p.Adress,p.Price,p.Type,p.Area,p.City,p.State);
+                                    }
+                                    }
+                                    fclose(fp);
+                                    fclose(fp1);
+                                    remove("property.txt");         //deleting the old file
+                                    rename("property1.txt","property.txt");     //Renaming the file
+                                    }
+                                    if(flag == 0){
+                                        printf("No such record found\n");
+                                        }
+                                        fclose(fp);
+                                        return 0;
+                                        }
+int main(){
+    printf("                                       ----------------------------------------                                                                                   \n");
+    printf("                                       | WELCOME TO KASHYAP ESTATE CORPORATION |                                                                                   \n");
+    printf("                                       | DESIGNED AND CODED BY  PAAWAN KASHYAP |                                                                                  \n");
+	printf("                                         ----------------------------------------                                                                                    \n");
+    int choice;
+    while(1){
+        printf("Enter 1 to add property record\nEnter 2 To display property record\nEnter 3 to buy/sell property\nEnter 4 to delete property record\nEnter 5 to search record\nEnter 6 to exit ");
+        scanf("%d",&choice);
+        switch(choice){             //Enter the choice
+            case 1:
+                add_property_record(); 
+                break;
+            case 2:
+            display_property_record();
+                break;
+            case 3:
+                Buy_sell_property();
+                break;
+            case 4:
+                delete_property_record();
+                break;
+            case 5:
+                property_record_search();
+                break;
+            case 6:
+                exit(0);
+                break;
+            default:
+                printf("Invalid choice");
+                break;
+            }
+            }
+            return 0;
+            }
+
+
